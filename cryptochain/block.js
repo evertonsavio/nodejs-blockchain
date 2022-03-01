@@ -17,7 +17,7 @@ class Block {
         return new this({
             timestamp: new Date(),
             lastHash: lastBlock.hash,
-            data: data
+            data: data,
         });
     }
 }
