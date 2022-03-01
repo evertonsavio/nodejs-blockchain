@@ -1,4 +1,5 @@
 const Block = require("./block");
+const cryptoHash = require("./crypto-hash")
 
 class Blockchain {
 
@@ -12,7 +13,35 @@ class Blockchain {
             data: data
         });
 
+        //???????????????
+        newBlock.hash = cryptoHash(newBlock.timestamp, newBlock.lastHash, newBlock.data);
+
         this.chain.push(newBlock)
+    }
+
+    static isValidChain(chain) {
+        if (JSON.stringify(chain[0]) !== JSON.stringify(Block.genesis())) {
+            return false
+        }
+
+        for (let i = 1; i < chain.length; i++) {
+            const { timestamp, lastHash, hash, data } = chain[i]
+            const actualLashHash = chain[i - 1].hash;
+
+            if (lastHash !== actualLashHash) {
+                return false
+            };
+
+            const validatedHash = cryptoHash(timestamp, lastHash, data);
+
+            if (hash !== validatedHash) {
+                return false
+            };
+        }
+
+        console.log(chain)
+
+        return true;
     }
 }
 
